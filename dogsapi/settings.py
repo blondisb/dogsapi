@@ -44,7 +44,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'dogs_api.urls'
+ROOT_URLCONF = 'dogsapi.urls'
 
 TEMPLATES = [
     {
@@ -62,19 +62,16 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'dogs_api.wsgi.application'
+WSGI_APPLICATION = 'dogsapi.wsgi.application'
 
-# Supabase Configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('SUPABASE_DB_NAME'),
-        'USER': config('SUPABASE_DB_USER'),
-        'PASSWORD': config('SUPABASE_DB_PASSWORD'),
-        'HOST': config('SUPABASE_DB_HOST'),
-        'PORT': config('SUPABASE_DB_PORT', default=5432),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+SUPABASE_URL = config('SUPABASE_URL')
+SUPABASE_KEY = config('SUPABASE_KEY')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
