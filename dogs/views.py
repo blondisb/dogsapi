@@ -6,6 +6,51 @@ from django.conf import settings
 from supabase import create_client
 from .serializers import AuthSerializer, AnswerSerializer
 
+
+
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def register_view(request):
+    """
+    Endpoint para registrar nuevos usuarios
+    """
+    try:
+        email = request.data.get('email')
+        password = request.data.get('password')
+        
+        if not email or not password:
+            return Response(
+                {'error': 'Email and password are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Crear usuario con Supabase
+        supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+        auth_response = supabase.auth.sign_up({
+            "email": email,
+            "password": password
+        })
+        
+        if auth_response.user:
+            return Response({
+                'message': 'User created successfully',
+                'user_id': auth_response.user.id,
+                'email': auth_response.user.email
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(
+                {'error': 'Failed to create user'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+    except Exception as e:
+        return Response(
+            {'error': str(e)},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        
+        
 @api_view(['POST'])
 @authentication_classes([])
 @permission_classes([AllowAny])
